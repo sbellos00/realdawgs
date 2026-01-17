@@ -1,20 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
-<%@ page import="RentIt.DB" %>
-<%@ page import="RentIt.User" %>  <!-- Import your User class so we can cast session attribute -->
+<%@ page import="RentIt.Property" %>
+<%@ page import="RentIt.PropertyDAO" %>
+<%@ page import="RentIt.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%
-            String areaParam = request.getParameter("area");
-            String area = (areaParam != null && !areaParam.trim().isEmpty()) ? areaParam : "Unknown Area";
-        %>
-        <%= area %> Apartments
-    </title>
+    <%
+        String areaParam = request.getParameter("area");
+        String area = (areaParam != null && !areaParam.trim().isEmpty()) ? areaParam : "All Areas";
+    %>
+    <title><%= area %> - Properties | RealDawgs</title>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- jQuery, Popper, Bootstrap JS -->
@@ -35,79 +34,93 @@
         .navbar-custom .navbar-brand, .navbar-custom .nav-link {
             color: #ffffff;
         }
-        /* Make columns stretch so each card has the same height. */
-        .col-md-4.d-flex {
-            display: flex !important;
-            align-items: stretch !important;
+        .navbar-custom .nav-link:hover {
+            color: #e0e0e0;
         }
-        /* Let the card itself flex so it fills its column. */
         .card {
-            margin: 15px;
+            margin: 15px 0;
             display: flex;
             flex-direction: column;
-            width: 100%;
+            height: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
-        /* Let the card body grow to fill leftover space. */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
         .card-body {
             flex-grow: 1;
         }
-        /* Fix or limit the image height to ensure uniformity. */
         .card-img-top {
             object-fit: cover;
-            height: 200px; /* Adjust to your preference. */
+            height: 200px;
+        }
+        .price-tag {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #127d88;
+        }
+        .property-details {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .property-details i {
+            margin-right: 5px;
+        }
+        .listing-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        .card-img-container {
+            position: relative;
         }
     </style>
 </head>
 <body>
 
 <%
-    // Check if user is logged in: 'userObj2024' is set by RentIt_loginController.jsp
+    // Check if user is logged in
     User loggedInUser = (User) session.getAttribute("userObj2024");
 %>
 
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-        <a class="navbar-brand" href="home.jsp">Rent It</a>
+        <a class="navbar-brand" href="home.html">RealDawgs</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
+                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon" style="color:#fff;"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-                <!-- Link back to home.jsp -->
                 <li class="nav-item">
-                    <a class="nav-link" href="home.jsp">Home</a>
+                    <a class="nav-link" href="home.html">Home</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 <%
                     if (loggedInUser != null) {
-                        // User is logged in
                 %>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            Signed in as: <strong><%= loggedInUser.getUsername() %></strong>
+                            Welcome, <strong><%= loggedInUser.getName() %></strong>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <!-- Logout link => let 'logout.jsp' remove session attribute or invalidate session -->
                         <a class="nav-link" href="logout.jsp">Logout</a>
                     </li>
                 <%
                     } else {
-                        // Not logged in => show Sign Up & Login
                 %>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.jsp">
-                            <span class="glyphicon glyphicon-user"></span> Sign Up
-                        </a>
+                        <a class="nav-link" href="RentIt_register.jsp">Sign Up</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.jsp">
-                            <span class="glyphicon glyphicon-log-in"></span> Login
-                        </a>
+                        <a class="nav-link" href="RentIt_login.jsp">Login</a>
                     </li>
                 <%
                     }
@@ -118,107 +131,134 @@
 </nav>
 
 <div class="jumbotron">
-    <h1><%= area %> Apartments</h1>
-    <p>Explore the best apartments in <%= area %>!</p>
+    <h1 class="display-4">Properties in <%= area %></h1>
+    <p class="lead">Browse available properties for sale and rent</p>
 </div>
 
-<%
-    // We'll store apartment data, including ID, in a list
-    List<String[]> apartments = new ArrayList<String[]>();
-
-    DB db = new DB();
-    Connection con = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-        con = db.getConnection();
-
-        String sql = "SELECT ID, Name, Description, Daily_rate, Size, Photo_URL "
-                   + "FROM apartment "
-                   + "WHERE Area = ?";
-
-        ps = con.prepareStatement(sql);
-        ps.setString(1, area);
-        rs = ps.executeQuery();
-
-        while (rs.next()) {
-            // Convert ID to String for easy array storage
-            String aptID      = String.valueOf(rs.getInt("ID"));
-            String aptName    = rs.getString("Name");
-            String aptDesc    = rs.getString("Description");
-            String aptRate    = rs.getString("Daily_rate");
-            String aptSize    = rs.getString("Size");
-            String aptPhoto   = rs.getString("Photo_URL");
-
-            apartments.add(new String[]{ aptID, aptName, aptDesc, aptRate, aptSize, aptPhoto });
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        if (rs != null)  try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-        if (ps != null)  try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
-        if (con != null) {
-            try { db.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
-    }
-%>
-
 <div class="container">
-    <div class="row">
+    <%
+        // Fetch properties for the selected area
+        PropertyDAO propertyDAO = new PropertyDAO();
+        List<Property> properties = new ArrayList<>();
+        String errorMessage = null;
+
+        try {
+            if (area != null && !area.equals("All Areas")) {
+                properties = propertyDAO.getPropertiesByArea(area);
+            } else {
+                properties = propertyDAO.getAllProperties();
+            }
+        } catch (Exception e) {
+            errorMessage = "Error loading properties: " + e.getMessage();
+        }
+
+        if (errorMessage != null) {
+    %>
+        <div class="alert alert-danger" role="alert">
+            <%= errorMessage %>
+        </div>
+    <%
+        } else if (properties.isEmpty()) {
+    %>
+        <div class="alert alert-info" role="alert">
+            <h4>No Properties Available</h4>
+            <p>There are currently no available properties in <%= area %>. Please check back later or browse other areas.</p>
+            <a href="home.html" class="btn btn-primary">Browse Other Areas</a>
+        </div>
+    <%
+        } else {
+    %>
+        <div class="mb-4">
+            <h4><%= properties.size() %> Properties Found</h4>
+        </div>
+
+        <div class="row">
         <%
-            if (!apartments.isEmpty()) {
-                for (String[] apt : apartments) {
-                    String aptID   = apt[0];
-                    String aptName = apt[1];
-                    String aptDesc = apt[2];
-                    String aptRate = apt[3];
-                    String aptSize = apt[4];
-                    String aptPhoto= apt[5];
+            for (Property property : properties) {
         %>
-        <div class="col-md-4 d-flex">
-            <div class="card">
-                <img
-                    src="<%= (aptPhoto != null && !aptPhoto.isEmpty())
-                            ? aptPhoto
-                            : "http://ism.dmst.aueb.gr/ismgroup77/images/placeholder.png" %>"
-                    class="card-img-top"
-                    alt="<%= aptName %>">
-                <div class="card-body">
-                    <h5 class="card-title"><%= aptName %></h5>
-                    <p class="card-text"><%= aptDesc %></p>
-                    <p>
-                        <strong>Daily Rate:</strong> €<%= aptRate %><br>
-                        <strong>Size:</strong> <%= aptSize %> sq.m
-                    </p>
-                    <!-- Reserve => sends apartment ID to reserve.jsp -->
-                    <a href="reserve.jsp?id=<%= aptID %>" class="btn btn-primary">Reserve</a>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-img-container">
+                        <% if (property.getListingType() != null) {
+                            String badgeClass = property.getListingType().equals("sale") ? "badge-success" : "badge-primary";
+                            String badgeText = property.getListingType().equals("sale") ? "For Sale" : "For Rent";
+                        %>
+                        <span class="badge <%= badgeClass %> listing-type-badge"><%= badgeText %></span>
+                        <% } %>
+
+                        <% if (property.getPhotoUrl() != null && !property.getPhotoUrl().isEmpty()) { %>
+                            <img src="<%= property.getPhotoUrl() %>" class="card-img-top" alt="<%= property.getTitle() %>">
+                        <% } else { %>
+                            <img src="https://via.placeholder.com/400x200?text=No+Image" class="card-img-top" alt="No image">
+                        <% } %>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title"><%= property.getTitle() %></h5>
+
+                        <div class="price-tag mb-2">
+                            <%= property.getFormattedPrice() %>
+                        </div>
+
+                        <div class="property-details mb-2">
+                            <span><strong><%= property.getRoomSummary() %></strong></span>
+                            <% if (property.getSquareMeters() > 0) { %>
+                                | <%= property.getSquareMeters() %> sqm
+                            <% } %>
+                        </div>
+
+                        <% if (property.getPropertyType() != null) { %>
+                        <div class="property-details mb-2">
+                            <small><em><%= property.getPropertyType() %></em></small>
+                        </div>
+                        <% } %>
+
+                        <% if (property.getDescription() != null && property.getDescription().length() > 0) { %>
+                        <p class="card-text">
+                            <%= property.getDescription().length() > 100 ?
+                                property.getDescription().substring(0, 100) + "..." :
+                                property.getDescription() %>
+                        </p>
+                        <% } %>
+
+                        <% if (property.getFeatures() != null && !property.getFeatures().isEmpty()) { %>
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <%
+                                    String[] features = property.getFeatures().split(",");
+                                    int featureCount = Math.min(features.length, 3);
+                                    for (int i = 0; i < featureCount; i++) {
+                                        String feature = features[i].trim().replace("_", " ");
+                                %>
+                                    <span class="badge badge-light"><%= feature %></span>
+                                <%
+                                    }
+                                    if (features.length > 3) {
+                                %>
+                                    <span class="badge badge-light">+<%= features.length - 3 %> more</span>
+                                <% } %>
+                            </small>
+                        </div>
+                        <% } %>
+
+                        <a href="reserve.jsp?id=<%= property.getId() %>" class="btn btn-primary btn-block">
+                            View Details
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <%
-                }
-            } else {
-        %>
-        <div class="col-12">
-            <h3 class="text-center text-muted">
-                No apartments found for "<%= area %>".
-            </h3>
-        </div>
         <%
             }
         %>
-    </div>
+        </div>
+    <%
+        }
+    %>
 </div>
 
-<!-- New Bottom Bar (replaces the previous footer include) -->
-<nav class="navbar navbar-custom mt-5">
-    <div class="container">
-        <span class="mx-auto text-white">
-            © 2025 Rent It
-        </span>
-    </div>
-</nav>
+<footer class="container-fluid text-center mt-5 mb-4">
+    <p class="text-muted">© 2026 RealDawgs. Find your perfect property in Athens.</p>
+</footer>
 
 </body>
 </html>
