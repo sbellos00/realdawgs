@@ -5,14 +5,17 @@ package RentIt.models;
  */
 public class User {
 
+    private int id;
     private String name;
     private String surname;
     private String email;
     private String username;
     private String password;
+    private String phone;
+    private String role;
 
     /**
-     * Constructor
+     * Basic constructor (for authentication)
      */
     public User(String name, String surname, String email, String username, String password) {
         this.name = name;
@@ -20,6 +23,19 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    /**
+     * Full constructor (for registration)
+     */
+    public User(String username, String password, String name, String surname, String email, String phone, String role) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
     }
 
     // Getters
@@ -62,5 +78,29 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

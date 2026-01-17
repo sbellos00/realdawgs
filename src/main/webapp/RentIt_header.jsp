@@ -1,26 +1,51 @@
 <%@ page errorPage="RentIt_error.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
-	<div class="header">
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		<meta name="description" content="RentIt">
-		<meta name="author" content="your email">
-		<link rel="icon" href="<%=request.getContextPath() %>/images/favicon.ico">
-	
-		<title><%= (request.getAttribute("pageTitle") != null) ? request.getAttribute("pageTitle") : "RentIt" %></title>
-	
-		<!-- Bootstrap core CSS -->
-		<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.min.css">	
-		<!-- Bootstrap Optional theme -->
-		<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-theme.min.css">
-		<!-- Custom styles for this template -->
-		<link href="<%=request.getContextPath() %>/css/theme_8180012.css" rel="stylesheet">
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-			  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-			  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->			
-	</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= (request.getAttribute("pageTitle") != null) ? request.getAttribute("pageTitle") : "RealDawgs" %></title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0a0b;
+            --bg-card: #141416;
+            --bg-elevated: #1a1a1d;
+            --bg-input: #1f1f23;
+            --accent: #d4a853;
+            --accent-hover: #e8bc6a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a5;
+            --text-muted: #6b6b70;
+            --border: #2a2a2d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>

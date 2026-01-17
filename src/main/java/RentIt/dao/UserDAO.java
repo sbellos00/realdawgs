@@ -55,5 +55,23 @@ public class UserDAO {
 
     } // End of authenticate
 
+    /**
+     * Register a new user (stub - stores in memory only)
+     * 
+     * @param user User object to register
+     * @throws Exception if registration fails
+     */
+    public void register(User user) throws Exception {
+        // In a real app, this would insert into database
+        // For now, just validate and accept (in-memory only)
+        if (user.getUsername() == null || user.getUsername().length() < 5) {
+            throw new Exception("Username must be at least 5 characters");
+        }
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            throw new Exception("Password must be at least 6 characters");
+        }
+        // Registration accepted (not persisted in this mock version)
+    }
+
     
 } //End of class

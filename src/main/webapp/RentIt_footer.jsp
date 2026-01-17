@@ -1,17 +1,4 @@
 <%@ page errorPage="RentIt_error.jsp"%>
-<footer class="navbar-inverse">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <p class="text-center">&copy; Copyright 2024 by RentIt</p>
-            </div>
-        </div>
-    </div>
+<footer style="text-align: center; padding: 3rem 2rem; color: #6b6b70; border-top: 1px solid #2a2a2d; margin-top: 3rem; background: #141416;">
+    <p style="margin: 0;">© 2026 RealDawgs. Premium real estate in Athens.</p>
 </footer>
-<!-- End footer -->
-
-
-<!-- jQuery library -->
-<script src="js/jquery.min.js"></script>
-<!-- Bootstrap core JavaScript -->
-<script	src="js/bootstrap.min.js"></script>
