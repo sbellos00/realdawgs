@@ -5,8 +5,8 @@
 <%@ page import="java.io.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*" %>
-<%@ page import = "RentIt.UserDAO"%>
-<%@ page import = "RentIt.User"%>
+<%@ page import = "RentIt.dao.UserDAO"%>
+<%@ page import = "RentIt.models.User"%>
 <%@ page session = "true" %>
 
 <%

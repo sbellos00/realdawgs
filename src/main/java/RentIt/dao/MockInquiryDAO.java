@@ -1,4 +1,6 @@
-package RentIt;
+package RentIt.dao;
+
+import RentIt.models.Inquiry;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

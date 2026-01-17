@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="RentIt.UserDAO" %>
-<%@ page import="RentIt.User" %>
+<%@ page import="RentIt.dao.UserDAO" %>
+<%@ page import="RentIt.models.User" %>
 <%@ page errorPage="RentIt_error.jsp"%>
 <!DOCTYPE html>
 <html>

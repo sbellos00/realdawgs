@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="RentIt.Property" %>
-<%@ page import="RentIt.PropertyDAO" %>
-<%@ page import="RentIt.MockPropertyDAO" %>
-<%@ page import="RentIt.User" %>
+<%@ page import="RentIt.models.Property" %>
+<%@ page import="RentIt.dao.PropertyDAO" %>
+<%@ page import="RentIt.dao.MockPropertyDAO" %>
+<%@ page import="RentIt.models.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>

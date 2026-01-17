@@ -1,4 +1,7 @@
-package RentIt;
+package RentIt.dao;
+
+import RentIt.models.Property;
+import RentIt.utils.DB;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -298,7 +301,7 @@ public class PropertyDAO {
      * @return Property object
      * @throws SQLException if column access fails
      */
-    private Property mapResultSetToProperty(ResultSet rs) throws SQLException {
+    protected Property mapResultSetToProperty(ResultSet rs) throws SQLException {
         Property property = new Property();
 
         property.setId(rs.getInt("id"));

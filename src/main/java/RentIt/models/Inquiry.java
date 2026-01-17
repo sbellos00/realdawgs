@@ -1,4 +1,4 @@
-package RentIt;
+package RentIt.models;
 
 import java.sql.Timestamp;
 

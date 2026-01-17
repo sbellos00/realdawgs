@@ -1,4 +1,7 @@
-package lesson6;
+package RentIt.services;
+
+import RentIt.models.User;
+import RentIt.utils.DB;
 
 import java.sql.*;
 
@@ -10,13 +13,13 @@ import java.sql.*;
 public class UserService {
 
     /**
-	 * This method is used to authenticate a user.     
-	 * 
-	 * @param username, String the username
-	 * @param password, String the password
-	 * @return User, the User object
-	 * @throws Exception, if the credentials are not valid
-	 */
+     * This method is used to authenticate a user.     
+     * 
+     * @param username, String the username
+     * @param password, String the password
+     * @return User, the User object
+     * @throws Exception, if the credentials are not valid
+     */
     public User authenticate(String username, String password) throws Exception {
     
 

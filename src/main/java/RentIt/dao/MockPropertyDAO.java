@@ -1,4 +1,6 @@
-package RentIt;
+package RentIt.dao;
+
+import RentIt.models.Property;
 
 import java.util.ArrayList;
 import java.util.List;

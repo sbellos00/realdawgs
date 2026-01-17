@@ -1,7 +1,7 @@
-package RentIt;
+package RentIt.models;
 
 /**
- * Reservation model class
+ * Reservation model class (Legacy - to be refactored)
  */
 public class Reservation {
 

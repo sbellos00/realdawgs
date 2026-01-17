@@ -4,8 +4,8 @@
 <%@ page import="java.io.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*" %>
-<%@ page import = "RentIt.UserDAO"%>
-<%@ page import = "RentIt.User"%>
+<%@ page import = "RentIt.dao.UserDAO"%>
+<%@ page import = "RentIt.models.User"%>
 <%@ page session = "true" %>
 
 <!DOCTYPE html>
@@ -77,7 +77,7 @@
 
 <%
     // Attempt to retrieve the user object from the session
-    RentIt.User loggedInUser = (RentIt.User) session.getAttribute("userObj2024");
+    RentIt.models.User loggedInUser = (RentIt.models.User) session.getAttribute("userObj2024");
 %>
 
 <nav class="navbar navbar-expand-lg navbar-custom">

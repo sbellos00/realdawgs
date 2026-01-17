@@ -1,4 +1,4 @@
-package RentIt;
+package RentIt.models;
 
 /**
  * User model class

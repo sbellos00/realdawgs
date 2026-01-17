@@ -1,4 +1,7 @@
-package RentIt;
+package RentIt.dao;
+
+import RentIt.models.Inquiry;
+import RentIt.utils.DB;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -334,7 +337,7 @@ public class InquiryDAO {
      * @return Inquiry object
      * @throws SQLException if column access fails
      */
-    private Inquiry mapResultSetToInquiry(ResultSet rs) throws SQLException {
+    protected Inquiry mapResultSetToInquiry(ResultSet rs) throws SQLException {
         Inquiry inquiry = new Inquiry();
 
         inquiry.setId(rs.getInt("id"));
