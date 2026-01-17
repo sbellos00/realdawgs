@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="RentIt.Property" %>
 <%@ page import="RentIt.PropertyDAO" %>
+<%@ page import="RentIt.MockPropertyDAO" %>
 <%@ page import="RentIt.Inquiry" %>
 <%@ page import="RentIt.InquiryDAO" %>
+<%@ page import="RentIt.MockInquiryDAO" %>
 <%@ page import="RentIt.User" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +66,7 @@
     if (propertyIdParam != null && !propertyIdParam.trim().isEmpty()) {
         try {
             int propertyId = Integer.parseInt(propertyIdParam);
-            PropertyDAO propertyDAO = new PropertyDAO();
+            PropertyDAO propertyDAO = new MockPropertyDAO();
             property = propertyDAO.getPropertyById(propertyId);
 
             if (property == null) {
@@ -93,7 +95,7 @@
             errorMessage = "Please fill in all required fields.";
         } else {
             try {
-                InquiryDAO inquiryDAO = new InquiryDAO();
+                InquiryDAO inquiryDAO = new MockInquiryDAO();
                 Inquiry inquiry;
 
                 if (loggedInUser != null) {

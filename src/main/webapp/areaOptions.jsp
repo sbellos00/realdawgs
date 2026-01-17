@@ -2,6 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="RentIt.Property" %>
 <%@ page import="RentIt.PropertyDAO" %>
+<%@ page import="RentIt.MockPropertyDAO" %>
 <%@ page import="RentIt.User" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,7 +139,7 @@
 <div class="container">
     <%
         // Fetch properties for the selected area
-        PropertyDAO propertyDAO = new PropertyDAO();
+        PropertyDAO propertyDAO = new MockPropertyDAO();
         List<Property> properties = new ArrayList<>();
         String errorMessage = null;
 
