@@ -5,8 +5,8 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run with Tomcat
-FROM tomcat:10-jdk17
+# Stage 2: Run with Tomcat 9 (compatible with javax.servlet)
+FROM tomcat:9-jdk17
 
 # Remove default webapps
 RUN rm -rf /usr/local/tomcat/webapps/*

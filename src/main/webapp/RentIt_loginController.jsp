@@ -23,11 +23,11 @@ try {
 
    
     session.setAttribute("userObj2024",authenticatedUser);
-    response.sendRedirect("home.html");
+    response.sendRedirect("home.jsp");
 
 } catch(Exception e) {
   
-    request.setAttribute("message","Wrong username or password");
+    request.setAttribute("message", e.getMessage());
 %>
 <!--forwards to Login page-->
 <jsp:forward page="RentIt_login.jsp" />
