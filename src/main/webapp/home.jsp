@@ -305,61 +305,83 @@
         }
         
         .neighborhood-card {
-            position: relative;
+            background: var(--bg-card);
             border-radius: 16px;
             overflow: hidden;
-            aspect-ratio: 4/3;
-            cursor: pointer;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
         }
         
         .neighborhood-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: var(--accent);
+        }
+        
+        .neighborhood-image {
+            aspect-ratio: 16/10;
+            overflow: hidden;
         }
         
         .neighborhood-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.5s ease;
         }
         
         .neighborhood-card:hover img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
         
-        .neighborhood-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9) 100%);
+        .neighborhood-info {
+            padding: 1.25rem 1.5rem;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 1.5rem;
-        }
-        
-        .neighborhood-card:hover .neighborhood-overlay {
-            background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.95) 100%);
+            justify-content: space-between;
+            align-items: center;
         }
         
         .neighborhood-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
         }
         
         .neighborhood-count {
-            font-size: 0.9rem;
-            color: var(--accent);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
         
-        .neighborhood-card:hover .neighborhood-count {
-            opacity: 1;
-            transform: translateY(0);
+        .neighborhood-arrow {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-elevated);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .neighborhood-card:hover .neighborhood-arrow {
+            background: var(--accent);
+        }
+        
+        .neighborhood-arrow svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+            transition: stroke 0.2s ease;
+        }
+        
+        .neighborhood-card:hover .neighborhood-arrow svg {
+            stroke: var(--bg-dark);
         }
         
         /* Footer */
@@ -454,50 +476,92 @@
         
         <div class="neighborhood-grid">
             <a href="areaOptions.jsp?area=Kypseli" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80" alt="Kypseli">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Kypseli</div>
-                    <div class="neighborhood-count">12 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80" alt="Kypseli">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Kypseli</div>
+                        <div class="neighborhood-count">12 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             
             <a href="areaOptions.jsp?area=Piraeus" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80" alt="Piraeus">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Piraeus</div>
-                    <div class="neighborhood-count">8 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80" alt="Piraeus">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Piraeus</div>
+                        <div class="neighborhood-count">8 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             
             <a href="areaOptions.jsp?area=Peristeri" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80" alt="Peristeri">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Peristeri</div>
-                    <div class="neighborhood-count">10 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80" alt="Peristeri">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Peristeri</div>
+                        <div class="neighborhood-count">10 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             
             <a href="areaOptions.jsp?area=Monastiraki" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?w=800&q=80" alt="Monastiraki">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Monastiraki</div>
-                    <div class="neighborhood-count">6 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?w=800&q=80" alt="Monastiraki">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Monastiraki</div>
+                        <div class="neighborhood-count">6 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             
             <a href="areaOptions.jsp?area=Aghia Paraskevi" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Aghia Paraskevi">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Aghia Paraskevi</div>
-                    <div class="neighborhood-count">9 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Aghia Paraskevi">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Aghia Paraskevi</div>
+                        <div class="neighborhood-count">9 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
             
             <a href="areaOptions.jsp?area=Chalandri" class="neighborhood-card">
-                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Chalandri">
-                <div class="neighborhood-overlay">
-                    <div class="neighborhood-name">Chalandri</div>
-                    <div class="neighborhood-count">11 Properties Available</div>
+                <div class="neighborhood-image">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Chalandri">
+                </div>
+                <div class="neighborhood-info">
+                    <div>
+                        <div class="neighborhood-name">Chalandri</div>
+                        <div class="neighborhood-count">11 properties</div>
+                    </div>
+                    <div class="neighborhood-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                 </div>
             </a>
         </div>
