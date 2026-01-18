@@ -120,7 +120,7 @@
         </div>
         <h1>Thank You!</h1>
         <p>Your submission has been received. We appreciate your interest and will be in touch soon.</p>
-        <a href="home.html" class="btn">Return Home</a>
+        <a href="home.jsp" class="btn">Return Home</a>
     </div>
 </body>
 </html>

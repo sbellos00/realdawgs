@@ -172,7 +172,7 @@
         <% } %>
         
         <div>
-            <a href="home.html" class="btn">Return Home</a>
+            <a href="home.jsp" class="btn">Return Home</a>
             <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
         </div>
     </div>

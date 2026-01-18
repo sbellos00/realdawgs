@@ -309,7 +309,7 @@
 </head>
 <body>
 
-<a href="home.html" class="back-link">← Back to Home</a>
+<a href="home.jsp" class="back-link">← Back to Home</a>
 
 <div class="register-container">
     <div class="register-wrapper">
@@ -319,7 +319,7 @@
         </div>
         
         <div class="register-form-container">
-            <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+            <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
             
             <h1>Create Account</h1>
             <p class="subtitle">Fill in your details to get started</p>

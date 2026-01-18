@@ -414,12 +414,13 @@
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-inner">
-        <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+        <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
         
         <ul class="nav-links">
-            <li><a href="home.html">Home</a></li>
+            <li><a href="home.jsp">Home</a></li>
             <li><a href="areaOptions.jsp">Properties</a></li>
             <% if (loggedInUser != null) { %>
+                <li><a href="favorites.jsp">My Favorites</a></li>
                 <li><span class="user-greeting">Welcome, <strong><%= loggedInUser.getName() %></strong></span></li>
                 <li><a href="logout.jsp">Logout</a></li>
             <% } else { %>

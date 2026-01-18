@@ -283,11 +283,11 @@
 </head>
 <body>
 
-<a href="home.html" class="back-link">← Back to Home</a>
+<a href="home.jsp" class="back-link">← Back to Home</a>
 
 <div class="result-container">
     <div class="result-card">
-        <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+        <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
         
         <% if (registrationSuccess) { %>
             <div class="icon-circle icon-success">✓</div>
@@ -315,7 +315,7 @@
             
             <div class="button-group">
                 <a href="RentIt_login.jsp" class="btn-primary">Sign In Now</a>
-                <a href="home.html" class="btn-secondary">Browse Properties</a>
+                <a href="home.jsp" class="btn-secondary">Browse Properties</a>
             </div>
         <% } else { %>
             <div class="icon-circle icon-error">✕</div>
@@ -332,7 +332,7 @@
             
             <div class="button-group">
                 <a href="RentIt_register.jsp" class="btn-primary">Try Again</a>
-                <a href="home.html" class="btn-secondary">Back to Home</a>
+                <a href="home.jsp" class="btn-secondary">Back to Home</a>
             </div>
         <% } %>
     </div>

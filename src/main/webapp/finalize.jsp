@@ -521,10 +521,10 @@
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-inner">
-        <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+        <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
         
         <ul class="nav-links">
-            <li><a href="home.html">Home</a></li>
+            <li><a href="home.jsp">Home</a></li>
             <% if (property != null) { %>
                 <li><a href="reserve.jsp?id=<%= property.getId() %>">Back to Property</a></li>
             <% } %>
@@ -549,7 +549,7 @@
             <h2>Inquiry Submitted!</h2>
             <p><%= successMessage %></p>
             <div class="button-group">
-                <a href="home.html" class="btn-primary">Return Home</a>
+                <a href="home.jsp" class="btn-primary">Return Home</a>
                 <a href="reserve.jsp?id=<%= property.getId() %>" class="btn-secondary">Back to Property</a>
             </div>
         </div>
@@ -559,7 +559,7 @@
             <p><%= errorMessage %></p>
         </div>
         <div style="text-align: center;">
-            <a href="home.html" class="btn-primary">Return Home</a>
+            <a href="home.jsp" class="btn-primary">Return Home</a>
         </div>
     <% } else if (property != null) { %>
         <div class="page-header">

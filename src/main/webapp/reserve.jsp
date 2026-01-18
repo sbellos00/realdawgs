@@ -2,6 +2,7 @@
 <%@ page import="RentIt.models.Property" %>
 <%@ page import="RentIt.dao.PropertyDAO" %>
 <%@ page import="RentIt.dao.MockPropertyDAO" %>
+<%@ page import="RentIt.dao.MockFavoriteDAO" %>
 <%@ page import="RentIt.models.User" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -399,6 +400,57 @@
             background: rgba(255,255,255,0.05);
         }
         
+        /* Favorite Button */
+        .btn-favorite {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-favorite:hover {
+            border-color: var(--accent);
+            background: rgba(212, 168, 83, 0.1);
+        }
+        
+        .btn-favorite.active {
+            border-color: var(--accent);
+            background: rgba(212, 168, 83, 0.15);
+        }
+        
+        .btn-favorite svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-favorite.active svg {
+            fill: var(--accent);
+            stroke: var(--accent);
+        }
+        
+        .btn-favorite:not(.active) svg {
+            fill: transparent;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+        
+        .btn-favorite:not(.active):hover svg {
+            stroke: var(--accent);
+        }
+        
         .steps-list {
             margin-top: 1.5rem;
             padding-top: 1.5rem;
@@ -509,18 +561,19 @@
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-inner">
-        <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+        <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
         
         <ul class="nav-links">
-            <li><a href="home.html">Home</a></li>
+            <li><a href="home.jsp">Home</a></li>
             <li><a href="areaOptions.jsp">All Properties</a></li>
             <% if (loggedInUser != null) { %>
+                <li><a href="favorites.jsp">My Favorites</a></li>
                 <li><span style="color: var(--text-secondary);">Welcome, <strong style="color: var(--accent);"><%= loggedInUser.getName() %></strong></span></li>
                 <li><a href="logout.jsp">Logout</a></li>
             <% } else { %>
                 <li><a href="RentIt_login.jsp">Login</a></li>
                 <li><a href="RentIt_register.jsp" class="btn-accent">Get Started</a></li>
-                <% } %>
+            <% } %>
             </ul>
     </div>
 </nav>
@@ -530,7 +583,7 @@
         <div class="alert">
             <h3>Oops!</h3>
             <p><%= errorMessage %></p>
-            <a href="home.html" class="btn-accent">Return Home</a>
+            <a href="home.jsp" class="btn-accent">Return Home</a>
         </div>
     <% } else if (property != null) { %>
         
@@ -643,6 +696,24 @@
                             Express Interest
                         </a>
 
+                        <% 
+                        boolean isFavorite = false;
+                        if (loggedInUser != null) {
+                            try {
+                                MockFavoriteDAO favoriteDAO = new MockFavoriteDAO(session);
+                                isFavorite = favoriteDAO.isFavorite(loggedInUser.getId(), property.getId());
+                            } catch (Exception e) {
+                                // Silently fail
+                            }
+                        }
+                        %>
+                        <button class="btn-favorite<%= isFavorite ? " active" : "" %>" id="favoriteBtn" data-property-id="<%= property.getId() %>">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span><%= isFavorite ? "Saved to Favorites" : "Save to Favorites" %></span>
+                        </button>
+
                         <a href="areaOptions.jsp?area=<%= property.getArea() %>" class="btn-secondary">
                             Browse Similar
                         </a>
@@ -690,8 +761,46 @@
 
 <!-- Footer -->
 <footer>
-    <p>© 2026 RealDawgs. Premium real estate in Athens.</p>
+    <p>&copy; 2026 RealDawgs. Premium real estate in Athens.</p>
 </footer>
+
+<script>
+    // Handle favorite button click
+    var favoriteBtn = document.getElementById('favoriteBtn');
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            var propertyId = this.getAttribute('data-property-id');
+            var button = this;
+            
+            <% if (loggedInUser == null) { %>
+            window.location.href = 'RentIt_login.jsp';
+            return;
+            <% } %>
+            
+            fetch('favoriteController.jsp?action=toggle&propertyId=' + propertyId)
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        var textSpan = button.querySelector('span');
+                        if (data.isFavorite) {
+                            button.classList.add('active');
+                            textSpan.textContent = 'Saved to Favorites';
+                        } else {
+                            button.classList.remove('active');
+                            textSpan.textContent = 'Save to Favorites';
+                        }
+                    } else if (data.error === 'not_logged_in') {
+                        window.location.href = 'RentIt_login.jsp';
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+        });
+    }
+</script>
 
 </body>
 </html>

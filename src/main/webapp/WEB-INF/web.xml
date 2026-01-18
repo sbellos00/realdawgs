@@ -8,7 +8,7 @@
     <display-name>RealEstate App</display-name>
 
     <welcome-file-list>
-        <welcome-file>home.html</welcome-file>
+        <welcome-file>home.jsp</welcome-file>
         <welcome-file>home.jsp</welcome-file>
     </welcome-file-list>
 

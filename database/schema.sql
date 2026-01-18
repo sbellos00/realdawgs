@@ -78,6 +78,24 @@ CREATE TABLE IF NOT EXISTS inquiries (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- Table: favorites
+-- Stores user favorite properties
+-- ============================================
+CREATE TABLE IF NOT EXISTS favorites (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    property_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unique_favorite (user_id, property_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+
+    INDEX idx_user (user_id),
+    INDEX idx_property (property_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- Insert Sample Users
 -- ============================================
 INSERT INTO users (name, surname, email, username, password, phone) VALUES

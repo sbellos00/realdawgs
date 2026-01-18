@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="RentIt.models.Property" %>
-<%@ page import="RentIt.dao.PropertyDAO" %>
-<%@ page import="RentIt.dao.MockPropertyDAO" %>
 <%@ page import="RentIt.dao.MockFavoriteDAO" %>
 <%@ page import="RentIt.models.User" %>
 <!DOCTYPE html>
@@ -10,11 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <%
-        String areaParam = request.getParameter("area");
-        String area = (areaParam != null && !areaParam.trim().isEmpty()) ? areaParam : "All Areas";
-    %>
-    <title><%= area %> — Properties | RealDawgs</title>
+    <title>My Favorites — RealDawgs</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +29,7 @@
             --border: #2a2a2d;
             --success: #2ecc71;
             --info: #3498db;
+            --danger: #e74c3c;
         }
         
         * {
@@ -111,6 +106,10 @@
             color: var(--text-primary);
         }
         
+        .nav-links a.active {
+            color: var(--accent);
+        }
+        
         .btn-accent {
             background: var(--accent);
             color: var(--bg-dark);
@@ -166,31 +165,6 @@
         .page-header p {
             color: var(--text-secondary);
             font-size: 1.1rem;
-        }
-        
-        .breadcrumb {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .breadcrumb a {
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-        
-        .breadcrumb a:hover {
-            color: var(--accent);
-        }
-        
-        .breadcrumb span {
-            color: var(--text-muted);
-        }
-        
-        .breadcrumb .current {
-            color: var(--text-secondary);
         }
         
         /* Main Content */
@@ -313,7 +287,6 @@
             justify-content: center;
             transition: all 0.2s ease;
             backdrop-filter: blur(4px);
-            z-index: 10;
         }
         
         .favorite-btn:hover {
@@ -340,15 +313,6 @@
         
         .favorite-btn:not(.active):hover svg {
             stroke: var(--accent);
-        }
-        
-        .favorite-btn.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .favorite-btn.disabled:hover {
-            transform: none;
         }
         
         .property-content {
@@ -455,6 +419,11 @@
             display: inline-block;
         }
         
+        .alert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
         /* Footer */
         footer {
             text-align: center;
@@ -480,7 +449,7 @@
             <li><a href="home.jsp">Home</a></li>
             <li><a href="areaOptions.jsp">All Properties</a></li>
             <% if (loggedInUser != null) { %>
-                <li><a href="favorites.jsp">My Favorites</a></li>
+                <li><a href="favorites.jsp" class="active">My Favorites</a></li>
                 <li><span class="user-greeting">Welcome, <strong><%= loggedInUser.getName() %></strong></span></li>
                 <li><a href="logout.jsp">Logout</a></li>
             <% } else { %>
@@ -493,43 +462,30 @@
 
 <!-- Page Header -->
 <header class="page-header">
-    <h1>Properties in <span><%= area %></span></h1>
-    <p>Discover your perfect home in one of Athens' most vibrant neighborhoods</p>
-    <div class="breadcrumb">
-        <a href="home.jsp">Home</a>
-        <span>/</span>
-        <span class="current"><%= area %></span>
-    </div>
+    <h1>My <span>Favorites</span></h1>
+    <p>Properties you've saved for later</p>
 </header>
 
 <!-- Main Content -->
 <main class="main-content">
-    <%
-        PropertyDAO propertyDAO = new MockPropertyDAO();
-        List<Property> properties = new ArrayList<>();
+    <% if (loggedInUser == null) { %>
+        <div class="alert">
+            <div class="alert-icon">&#128274;</div>
+            <h3>Login Required</h3>
+            <p>Please log in to view your favorite properties.</p>
+            <a href="RentIt_login.jsp" class="btn-accent">Login Now</a>
+        </div>
+    <% } else {
+        MockFavoriteDAO favoriteDAO = new MockFavoriteDAO(session);
+        List<Property> favorites = new ArrayList<>();
         String errorMessage = null;
         
-        // Load user's favorites if logged in
-        java.util.Set<Integer> userFavorites = new java.util.HashSet<>();
-        if (loggedInUser != null) {
-            try {
-                MockFavoriteDAO favoriteDAO = new MockFavoriteDAO(session);
-                userFavorites = favoriteDAO.getFavoritesByUser(loggedInUser.getId());
-            } catch (Exception e) {
-                // Silently fail - favorites are optional
-            }
-        }
-
         try {
-            if (area != null && !area.equals("All Areas")) {
-                properties = propertyDAO.getPropertiesByArea(area);
-            } else {
-                properties = propertyDAO.getAllProperties();
-            }
+            favorites = favoriteDAO.getFavoriteProperties(loggedInUser.getId());
         } catch (Exception e) {
-            errorMessage = "Error loading properties: " + e.getMessage();
+            errorMessage = "Error loading favorites: " + e.getMessage();
         }
-
+        
         if (errorMessage != null) {
     %>
         <div class="alert">
@@ -537,26 +493,23 @@
             <p><%= errorMessage %></p>
             <a href="home.jsp" class="btn-accent">Return Home</a>
         </div>
-    <%
-        } else if (properties.isEmpty()) {
-    %>
+    <% } else if (favorites.isEmpty()) { %>
         <div class="alert">
-            <h3>No Properties Found</h3>
-            <p>There are currently no available properties in <%= area %>. Check back soon or explore other neighborhoods.</p>
-            <a href="home.jsp" class="btn-accent">Browse Neighborhoods</a>
+            <div class="alert-icon">&#9825;</div>
+            <h3>No Favorites Yet</h3>
+            <p>You haven't saved any properties yet. Browse our listings and click the heart icon to save properties you like.</p>
+            <a href="areaOptions.jsp" class="btn-accent">Browse Properties</a>
         </div>
-    <%
-        } else {
-    %>
+    <% } else { %>
         <div class="results-header">
             <div class="results-count">
-                <strong><%= properties.size() %></strong> properties found in <%= area %>
+                <strong><%= favorites.size() %></strong> saved propert<%= favorites.size() == 1 ? "y" : "ies" %>
             </div>
         </div>
         
         <div class="property-grid">
         <%
-            for (Property property : properties) {
+            for (Property property : favorites) {
                 String badgeClass = "badge-rent";
                 String badgeText = "For Rent";
                 if (property.getListingType() != null && property.getListingType().equals("sale")) {
@@ -572,21 +525,11 @@
                         <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80" alt="Property">
                     <% } %>
                     <span class="property-badge <%= badgeClass %>"><%= badgeText %></span>
-                    <% if (loggedInUser != null) { 
-                        boolean isFav = userFavorites.contains(property.getId());
-                    %>
-                    <button class="favorite-btn<%= isFav ? " active" : "" %>" data-property-id="<%= property.getId() %>" title="<%= isFav ? "Remove from favorites" : "Add to favorites" %>">
+                    <button class="favorite-btn active" data-property-id="<%= property.getId() %>" title="Remove from favorites">
                         <svg viewBox="0 0 24 24">
                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
                     </button>
-                    <% } else { %>
-                    <button class="favorite-btn disabled" title="Login to save favorites" onclick="window.location.href='RentIt_login.jsp'">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                    </button>
-                    <% } %>
                 </div>
                 
                 <div class="property-content">
@@ -601,7 +544,7 @@
                     </div>
                     
                     <% if (property.getPropertyType() != null) { %>
-                        <div class="property-type"><%= property.getPropertyType() %></div>
+                        <div class="property-type"><%= property.getPropertyType() %> in <%= property.getArea() %></div>
                     <% } %>
                     
                     <% if (property.getDescription() != null && property.getDescription().length() > 0) { %>
@@ -639,6 +582,7 @@
         </div>
     <%
         }
+    }
     %>
 </main>
 
@@ -649,27 +593,45 @@
 
 <script>
     // Handle favorite button clicks
-    document.querySelectorAll('.favorite-btn:not(.disabled)').forEach(function(btn) {
+    document.querySelectorAll('.favorite-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
             var propertyId = this.getAttribute('data-property-id');
             var button = this;
+            var card = this.closest('.property-card');
             
-            fetch('favoriteController.jsp?action=toggle&propertyId=' + propertyId)
+            fetch('favoriteController.jsp?action=remove&propertyId=' + propertyId)
                 .then(function(response) { return response.json(); })
                 .then(function(data) {
                     if (data.success) {
-                        if (data.isFavorite) {
-                            button.classList.add('active');
-                            button.setAttribute('title', 'Remove from favorites');
-                        } else {
-                            button.classList.remove('active');
-                            button.setAttribute('title', 'Add to favorites');
-                        }
-                    } else if (data.error === 'not_logged_in') {
-                        window.location.href = 'RentIt_login.jsp';
+                        // Animate and remove the card
+                        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+                        
+                        setTimeout(function() {
+                            card.remove();
+                            
+                            // Update count
+                            var countEl = document.querySelector('.results-count strong');
+                            if (countEl) {
+                                var newCount = data.favoriteCount;
+                                countEl.textContent = newCount;
+                                
+                                // Update "properties" text
+                                var countText = document.querySelector('.results-count');
+                                if (countText) {
+                                    countText.innerHTML = '<strong>' + newCount + '</strong> saved propert' + (newCount === 1 ? 'y' : 'ies');
+                                }
+                            }
+                            
+                            // Show empty state if no more favorites
+                            if (data.favoriteCount === 0) {
+                                location.reload();
+                            }
+                        }, 300);
                     }
                 })
                 .catch(function(error) {

@@ -279,7 +279,7 @@
 	</head>
 	<body>
 		
-<a href="home.html" class="back-link">← Back to Home</a>
+<a href="home.jsp" class="back-link">← Back to Home</a>
 
 <div class="login-container">
     <div class="login-wrapper">
@@ -289,7 +289,7 @@
         </div>
         
         <div class="login-form-container">
-            <a href="home.html" class="brand">Real<span>Dawgs</span></a>
+            <a href="home.jsp" class="brand">Real<span>Dawgs</span></a>
             
             <h1>Sign In</h1>
             <p class="subtitle">Enter your credentials to access your account</p>
